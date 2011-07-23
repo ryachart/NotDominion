@@ -6,6 +6,7 @@
  */
 
 #include "OutputText.h"
+#include "Card.h"
 
 OutputText::OutputText() {
 }
@@ -16,39 +17,34 @@ OutputText::OutputText(const OutputText& orig) {
 OutputText::~OutputText() {
 }
 
-bool OutputText::showOutput(int outputType, string output)
+bool OutputText::showOutput(int outputType, void* output)
 {
-    if(outputType == O_UPDATESCORES)
+    switch(outputType)
     {
-        stringstream ss;
-        ss << output;
-        int score, dealerScore;
-        ss >> score >> dealerScore;
-        
-        cout << "Your score is " << score << ".  Dealer\'s score is " << dealerScore << endl;
-        
-        return true;
-    }
-    
-    else if(outputType == O_GAMERESULT)
-    {
-        if(output == "won")
+        case O_UPDATEPLAYER:
         {
-            cout << "You won the game!" << endl;
+            Player *p = ((Player*)output);
+            vector<Card*> hand = p->getHand();
+
+            cout << "Your hand is ";
+            vector<Card*>::iterator iter;
+            for(iter = hand.begin(); iter != hand.end(); iter++)
+            {
+                cout << (*iter)->getName() << ", ";
+            }
+            cout << endl;
+            break;
         }
-        else if(output == "lost")
+            
+        case O_NEWTURN:
         {
-            cout << "You lost the game!" << endl;
+            cout << "It is now " << *((string*)output) << "'s turn" << endl;
+            break;
         }
-        else
-        {
-            // Neither won nor lost the game (draws aren't possible).
+            
+            
+        default:
+            // Unknown output type
             assert(false);
-        }
-    }    
-    else
-    {
-        // Unknown output type
-        assert(false);
     }
 }

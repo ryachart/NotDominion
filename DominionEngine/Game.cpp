@@ -20,84 +20,83 @@ Game::~Game() {
 
 void Game::startGame()
 {
-    dealerScore = 0;
-    score = 0;
     srand ( time(NULL) );
+    
+    // Assuming there's only 1 players for now
+    //players.push_back(new Player("Alexei", false));    
+    players.push_back(new Player("Ka Shing", false));
+    
+    // Initialize players
+    vector<Player*>::iterator iter;
+    for(iter = players.begin(); iter != players.end(); iter++)
+    {
+        (*iter)->initLibrary();
+        
+        // draw starting hand
+        (*iter)->doCleanUpStep();
+    }
     
     mainLoop();
 }
 
 void Game::mainLoop()
 {
-    bool success;
+    bool success; // success of output
+    currentTurn = 0;
+    
+    string name = players.at(currentTurn)->getName();
+    success = output.showOutput(O_NEWTURN, &name);
+    
     while(!gameIsOver)
     {
-        // Convert scores to string
-        stringstream ss;
-        ss << score << " " << dealerScore;
-        output.showOutput(O_UPDATESCORES, ss.str());
-            
-        string action = input.getInput(I_GETACTION);
+        Player *p = players.at(currentTurn);
+        success = output.showOutput(O_UPDATEPLAYER, p);
         
-        if(action == "stay" || score > 21)
+        string in = input.getInput(I_BUYPHASE);
+        
+        if(in == "quit")
         {
             gameIsOver = true;
+            break;
+        }
+        
+        else if(in == "end turn")
+        {
+            players.at(currentTurn)->doCleanUpStep();
             
-            bool wonGame = true;
-            if(score > 21)
-            {
-                wonGame = false;
-            }
-            if(!(dealerScore > 21) && dealerScore >= score)
-            {
-                wonGame = false;
-            }
+            // Advance to next turn
+            currentTurn++;
             
-            if(wonGame)
+            // loop current turn back to 0 if necessary
+            if(currentTurn >= players.size())
+                currentTurn = 0;
+            
+            // Output new turn
+            string name = players.at(currentTurn)->getName();
+            success = output.showOutput(O_NEWTURN, &name);
+            
+        }
+        
+        else
+        {
+            // Divide string into 2 words
+            istringstream iss(in, istringstream::in);
+            string command, target;
+            iss >> command >> target;
+            
+            if(command == "play")
             {
-                success = output.showOutput(O_GAMERESULT, "won");
+                players.at(currentTurn)->playCard(target);
+            }
+            else if(command == "buy")
+            {
+                // not implemented yet
             }
             else
             {
-                success = output.showOutput(O_GAMERESULT, "lost");
-            }                
-        }
-        else if(action == "hit")
-        {
-            score += (rand() % 10 + 1);
-            dealerScore += (rand() % 10 + 1);
-            
-            if(score > 21)
-            {
-                // Convert scores to string
-                stringstream ss;
-                ss << score << " " << dealerScore;
-                output.showOutput(O_UPDATESCORES, ss.str());
-                
-                success = output.showOutput(O_GAMERESULT, "lost");
-                gameIsOver = true;
-            }
-            else if(dealerScore > 21)
-            {
-                // Convert scores to string
-                stringstream ss;
-                ss << score << " " << dealerScore;
-                output.showOutput(O_UPDATESCORES, ss.str());
-                
-                success = output.showOutput(O_GAMERESULT, "won");
-                gameIsOver = true;
+                // ERROR - unknown command
+                assert(false);
             }
         }
-        else
-        {
-            // INVALID INPUT
-            // It is not the responsibility of the engine to validate input.
-            // It is the responsibility of the input module.
-            assert(false);
-        }
-        
     }
 }
-
-
-

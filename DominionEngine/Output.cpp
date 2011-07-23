@@ -16,7 +16,7 @@ Output::Output(const Output& orig) {
 Output::~Output() {
 }
 
-bool Output::showOutput(int outputType, string output)
+bool Output::showOutput(int outputType, void* output)
 {
     return false;  // not successful because output child method was not found
 }

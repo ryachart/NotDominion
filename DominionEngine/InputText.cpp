@@ -19,21 +19,49 @@ InputText::~InputText() {
 
 string InputText::getInput(int inputType)
 {
-    if(inputType == I_GETACTION)
+    if(inputType == I_BUYPHASE)
     {
-        string in;
+        string command, target;
         bool first = true;
+        bool invalid = false;
         do
         {
             if(!first)
                 cout << "Invalid input!" << endl;
             first = false;
             
-            cout << "What do you want to do?  hit or stay?" << endl;
-            cin >> in;
-        } while(in != "hit" && in != "stay");
+            cout << "What do you want to do? (options are \"play <card>\", \"buy <card>\", \"end turn\" or \"quit\")" << endl;
+            cin >> command;
+            
+            if(command == "quit")
+            {
+                cout << endl;
+                return command;
+            }
+            
+            if(command == "end")
+            {
+                cin >> target;
+                if(target != "turn")
+                    invalid = true;
+                else
+                {
+                    cout << endl;
+                    return command + " " + target;
+                }
+            }
+            
+            if(command == "play" || command == "buy")
+            {
+                cin >> target;
+                // ToDo:  check legality of target
+                cout << endl;
+                return command + " " + target;    
+            }
+
+        } while(true); // if we get this far, the input is invalid
         
-        return in;
+        
     }
     
     return "nil";

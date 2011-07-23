@@ -8,6 +8,7 @@
 #include <string>
 #include "IOTags.h"
 #include <sstream>
+#include "Player.h"
 //#include "Game.h"
 
 #ifndef OUTPUT_H
@@ -22,7 +23,7 @@ public:
     virtual ~Output();
     
     // returns if it is successful or not
-    bool showOutput(int outputType, string output);
+    bool showOutput(int outputType, void* output);
 private:
 
 };

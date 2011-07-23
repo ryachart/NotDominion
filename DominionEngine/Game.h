@@ -17,6 +17,8 @@
 #include "InputText.h"
 #include "OutputText.h"
 #include "IOTags.h"
+#include "Player.h"
+#include "Card.h"
 
 
 using namespace std;
@@ -37,8 +39,11 @@ private:
     OutputText output;
     
     bool gameIsOver;
-    int score;
-    int dealerScore;
+    
+    vector<Player*> players;
+    
+    // keeps track of whose turn it is
+    int currentTurn;
 
 };
 
