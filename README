@@ -1,0 +1,3 @@
+The Engine is currently a working Blackjack game.
+
+See the way I'm using getInput() and showOutput().  The Input and Output classes are the parent classes of what's actually going to be doing all of the action.  The InputText and OutputText classes are implemented to do I/O through the command line.  The only things that need to be changed to the engine in order to make other forms of I/O work are to implement new Input and Output classes, and change InputText and OutputText in Game.h to be whatever your new classes are.  Apart from that, there should be 0 modifications to the engine.
