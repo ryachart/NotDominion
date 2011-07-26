@@ -9,9 +9,9 @@
 #define	INPUTTEXT_H
 
 #include "Input.h"
-//#include "Game.h"   // uncomment this line and it won't compile, but I need this line :(
 #include <string>
 #include <iostream>
+
 
 using namespace std;
 
@@ -21,7 +21,7 @@ public:
     InputText(const InputText& orig);
     virtual ~InputText();
     
-    string getInput(int inputType);
+    string getInput(int inputType, Game* game);
     
 private:
     

@@ -9,12 +9,13 @@
 #define	IOTAGS_H
 
 // Input tags
-#define I_GETACTION             1
+#define I_BUYPHASE             1
 
 
 // Output tags
-#define O_GAMERESULT            1001
-#define O_UPDATESCORES          1002
+#define O_UPDATEPLAYER           1001
+#define O_NEWTURN                1002
+#define O_GAMEOVER               1003
 
 
 #endif	/* IOTAGS_H */

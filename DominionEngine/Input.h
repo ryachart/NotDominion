@@ -9,7 +9,9 @@
 #define	INPUT_H
 #include <string>
 #include "IOTags.h"
-//#include "Game.h"
+
+// Forward declaration
+class Game;
 
 using namespace std;
 
@@ -19,7 +21,8 @@ public:
     Input(const Input& orig);
     virtual ~Input();
     
-    string getInput(int inputType);
+    // game pointer is usually not necessary, but it might be in order to get information about the game.
+    string getInput(int inputType, Game* game);
 private:
 
 };

@@ -9,6 +9,7 @@
 #define	OUTPUTTEXT_H
 
 #include "Output.h"
+#include <vector>
 #include <iostream>
 
 using namespace std;
@@ -19,8 +20,8 @@ public:
     OutputText(const OutputText& orig);
     virtual ~OutputText();
     
-    // returns if it is successful or not
-    bool showOutput(int outputType, string output);
+    // Return value is if it is successful or not
+    bool showOutput(int outputType, void* output);
 private:
 
 };

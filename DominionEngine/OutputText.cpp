@@ -6,6 +6,7 @@
  */
 
 #include "OutputText.h"
+#include "Card.h"
 
 OutputText::OutputText() {
 }
@@ -16,39 +17,40 @@ OutputText::OutputText(const OutputText& orig) {
 OutputText::~OutputText() {
 }
 
-bool OutputText::showOutput(int outputType, string output)
+bool OutputText::showOutput(int outputType, void* output)
 {
-    if(outputType == O_UPDATESCORES)
+    switch(outputType)
     {
-        stringstream ss;
-        ss << output;
-        int score, dealerScore;
-        ss >> score >> dealerScore;
-        
-        cout << "Your score is " << score << ".  Dealer\'s score is " << dealerScore << endl;
-        
-        return true;
-    }
-    
-    else if(outputType == O_GAMERESULT)
-    {
-        if(output == "won")
+        case O_UPDATEPLAYER:
         {
-            cout << "You won the game!" << endl;
+            Player *p = ((Player*)output);
+            vector<Card*> hand = p->getHand();
+            cout << "You have " << p->getCurrentCoins() << " coins and " << p->getCurrentBuys() << " buys available" << endl;
+            cout << "Your hand is ";
+            vector<Card*>::iterator iter;
+            for(iter = hand.begin(); iter != hand.end(); iter++)
+            {
+                cout << (*iter)->getName() << ", ";
+            }
+            cout << endl;
+            break;
         }
-        else if(output == "lost")
+            
+        case O_NEWTURN:
         {
-            cout << "You lost the game!" << endl;
+            cout << "It is now " << *((string*)output) << "'s turn" << endl;
+            break;
         }
-        else
+        
+        case O_GAMEOVER:
         {
-            // Neither won nor lost the game (draws aren't possible).
+            cout << "The game is now over!  (Either the Provinces are gone, or any 3 supply piles are empty!)" << endl;
+            break;
+        }
+            
+            
+        default:
+            // Unknown output type
             assert(false);
-        }
-    }    
-    else
-    {
-        // Unknown output type
-        assert(false);
     }
 }
