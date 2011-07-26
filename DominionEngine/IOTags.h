@@ -14,7 +14,8 @@
 
 // Output tags
 #define O_UPDATEPLAYER           1001
-#define O_NEWTURN               1002
+#define O_NEWTURN                1002
+#define O_GAMEOVER               1003
 
 
 #endif	/* IOTAGS_H */

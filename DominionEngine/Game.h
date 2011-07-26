@@ -20,6 +20,10 @@
 #include "Player.h"
 #include "Card.h"
 
+// Forward declarations to avoid dependency loop
+//class OutputText;
+//class Player;
+
 
 using namespace std;
 
@@ -29,11 +33,22 @@ public:
     Game(const Game& orig);
     virtual ~Game();
     
+    // Initializes the game and starts running the main loop.  To be called externally.
     void startGame();
+    
+    // Accessor functions
+    vector<Card*> getSupply();
+    
+    // Returns sorted list of names of cards in supply
+    vector<string> getSupplyCardNames(); 
     
 private:
     
+    // To be called by startGame();
     void mainLoop();
+    
+    // Checks the supply piles to see if either all the provinces are empty, or any 3 piles are empty.
+    bool gameShouldEnd();
     
     InputText input;
     OutputText output;
@@ -41,6 +56,12 @@ private:
     bool gameIsOver;
     
     vector<Player*> players;
+    
+    // Stores the appropriate amount of each supply card.  Changes as the game goes on.
+    vector<Card*> supply;
+    
+    // Stores only one string for each supply pile.  Does not change after it is initialized.
+    vector<string> cardsInSupply;
     
     // keeps track of whose turn it is
     int currentTurn;

@@ -49,6 +49,16 @@ string Player::getName()
     return name;
 }
 
+int Player::getCurrentCoins()
+{
+    return currentCoins;
+}
+
+int Player::getCurrentBuys()
+{
+    return currentBuys;
+}
+
 void Player::initLibrary()
 {
     for(int i = 0; i < 7; i++)
@@ -56,23 +66,6 @@ void Player::initLibrary()
 
     for(int i = 0; i < 3; i++)
         library.push_back(new Card("estate"));
-
-    /*
-    // For testing purposes    
-    library.push_back(new Card("1"));
-    library.push_back(new Card("2"));
-    library.push_back(new Card("3"));
-    library.push_back(new Card("4"));
-    library.push_back(new Card("5"));
-    library.push_back(new Card("6"));
-    library.push_back(new Card("7"));
-    library.push_back(new Card("8"));
-    library.push_back(new Card("9"));
-    library.push_back(new Card("10"));
-    library.push_back(new Card("11"));
-    library.push_back(new Card("12"));
-    library.push_back(new Card("13"));
-     */  
     
     // shuffle
     shuffleGraveyardIntoLibrary();
@@ -97,12 +90,17 @@ void Player::doCleanUpStep()
     graveyard.insert(graveyard.end(), hand.begin(), hand.end());
     hand.clear();
     
+    // Discard cards from play
+    graveyard.insert(graveyard.end(), inPlay.begin(), inPlay.end());
+    inPlay.clear();
+    
     // Draw 5 cards
     for(int i = 0; i < 5; i++)
         drawCard();
     
     // Reset turn
     currentCoins = 0;
+    currentBuys = 1;
 }
 
 void Player::drawCard()
@@ -155,10 +153,61 @@ void Player::playCard(string card)
     currentCoins += (*iter)->getCoinValue();
     
     // Add card to inPlay
-    inPlay.insert(inPlay.end(), iter, iter);
+    inPlay.push_back(*iter);
     
     // Remove card from hand
     hand.erase(iter);
+}
+
+void Player::playAllTreasures()
+{
+    // Iterate through cards in hand
+    vector<Card*>::iterator iter;
+    for(iter = hand.begin(); iter != hand.end();)
+    {
+        // If the card is a treasure, play it. (This removes the card from hand, so we don't need to increment iterator).
+        if((*iter)->isATreasure())
+            playCard((*iter)->getName());
+        
+        // Otherwise, increment iterator
+        else
+            iter++;
+    }
+}
+
+void Player::buyCard(string card, vector<Card*>* supply)
+{
+    // Find the card to be bought (expressed as an iterator)
+    vector<Card*>::iterator iter;
+    for(iter = supply->begin(); iter != supply->end(); iter++)
+    {
+        if( (*iter)->getName() == card)
+            break;
+    }
+    
+    // ERROR - Card not found in supply
+    if(iter == supply->end())
+        assert(false);
+    
+    // ERROR - Don't have enough coins to buy card
+    if(currentCoins < (*iter)->getCost())
+        assert(false);
+    
+    // ERROR - No buys available
+    if(currentBuys <= 0)
+        assert(false);
+    
+    // Subtract cost of card from coins
+    currentCoins -= (*iter)->getCost();
+    
+    // Add card to graveyard
+    graveyard.push_back(*iter);
+    
+    // Remove card from supply
+    supply->erase(iter);
+    
+    // Decrement number of buys
+    currentBuys--;
 }
 
 int Player::getPointTotal()

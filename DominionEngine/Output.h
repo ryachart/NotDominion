@@ -4,6 +4,8 @@
  *
  * Created on July 21, 2011, 1:28 PM
  */
+#ifndef OUTPUT_H
+#define	OUTPUT_H
 
 #include <string>
 #include "IOTags.h"
@@ -11,8 +13,7 @@
 #include "Player.h"
 //#include "Game.h"
 
-#ifndef OUTPUT_H
-#define	OUTPUT_H
+
 
 using namespace std;
 
